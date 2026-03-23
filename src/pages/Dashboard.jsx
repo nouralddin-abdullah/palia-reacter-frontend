@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { useVotes } from '../context/VoteContext';
 import { getTransactions } from '../services/api';
@@ -17,6 +17,18 @@ export default function Dashboard() {
   const [sendError, setSendError] = useState('');
   const [showConfirm, setShowConfirm] = useState(false);
   const [sending, setSending] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
   // Redeem Code state
   const [redeemCodeInput, setRedeemCodeInput] = useState('');
@@ -211,15 +223,49 @@ export default function Dashboard() {
           </div>
           <div className={styles.sendGroup}>
             <label>Reaction Type</label>
-            <select
-              value={reactionType}
-              onChange={(e) => setReactionType(e.target.value)}
-              className={styles.selectInput}
-            >
-              {REACTION_TYPES.map(r => (
-                <option key={r.id} value={r.id}>{r.emoji} {r.label}</option>
-              ))}
-            </select>
+            <div ref={dropdownRef} style={{ position: 'relative', width: '100%' }}>
+              <div
+                className={styles.selectInput}
+                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                style={{ 
+                  display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', 
+                  userSelect: 'none', minHeight: '42px', backgroundColor: 'var(--bg)', 
+                  border: '1px solid var(--border)', borderRadius: '6px', padding: '0 12px' 
+                }}
+              >
+                <img src={getReactionImage(reactionType)} style={{ width: 20, height: 20 }} alt="reaction" />
+                <span>{REACTION_TYPES.find(r => r.id === reactionType)?.label}</span>
+                <span style={{ marginLeft: 'auto', fontSize: '0.8rem', color: 'var(--text-muted)' }}>▼</span>
+              </div>
+              
+              {isDropdownOpen && (
+                <div style={{ 
+                  position: 'absolute', top: '100%', left: 0, right: 0, marginTop: '4px', 
+                  backgroundColor: 'var(--surface)', border: '1px solid var(--border)', 
+                  borderRadius: '6px', zIndex: 10, overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.3)' 
+                }}>
+                  {REACTION_TYPES.map(r => (
+                    <div
+                      key={r.id}
+                      onClick={() => {
+                        setReactionType(r.id);
+                        setIsDropdownOpen(false);
+                      }}
+                      style={{
+                        display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 12px', cursor: 'pointer',
+                        backgroundColor: reactionType === r.id ? 'rgba(255,255,255,0.05)' : 'transparent',
+                        borderBottom: r.id !== REACTION_TYPES[REACTION_TYPES.length - 1].id ? '1px solid var(--border)' : 'none'
+                      }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.08)'}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = reactionType === r.id ? 'rgba(255,255,255,0.05)' : 'transparent'}
+                    >
+                      <img src={getReactionImage(r.id)} alt={r.label} style={{ width: 20, height: 20 }} />
+                      <span>{r.label}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
           <button className={styles.sendBtn} onClick={handleSendClick} disabled={!targetName || !amount}>
             Send Votes
