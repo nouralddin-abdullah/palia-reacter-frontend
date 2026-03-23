@@ -22,4 +22,5 @@ export const REACTION_TYPES = [
   { id: 'amaze', label: 'Amaze', emoji: '🤩' },
   { id: 'cool', label: 'Cool', emoji: '😎' },
   { id: 'love', label: 'Love', emoji: '😍' },
+  { id: 'cute', label: 'Cute', emoji: '🥺' },
 ];
