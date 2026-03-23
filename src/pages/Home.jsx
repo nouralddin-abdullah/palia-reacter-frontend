@@ -40,11 +40,27 @@ export default function Home() {
     <>
       {/* Hero */}
       <section className={styles.hero}>
-        <h1>Buy Votes &amp; Distribute Them Your Way</h1>
-        <p>
-          Purchase vote packages and send them to anyone, in any amount. Fast, simple, and flexible.
-        </p>
-        <Link to="/pricing" className={styles.heroCta}>View Packages</Link>
+        {import.meta.env.VITE_APP_MODE === 'trial' ? (
+          <>
+            <h1>Distribute Votes Your Way</h1>
+            <p>
+              Send votes to anyone, in any amount. Fast, simple, and flexible.
+            </p>
+            {user ? (
+              <Link to="/dashboard" className={styles.heroCta}>Dashboard</Link>
+            ) : (
+              <Link to="/login" className={styles.heroCta}>Login</Link>
+            )}
+          </>
+        ) : (
+          <>
+            <h1>Buy Votes &amp; Distribute Them Your Way</h1>
+            <p>
+              Purchase vote packages and send them to anyone, in any amount. Fast, simple, and flexible.
+            </p>
+            <Link to="/pricing" className={styles.heroCta}>View Packages</Link>
+          </>
+        )}
       </section>
 
       {/* Feature Cards */}
@@ -71,24 +87,34 @@ export default function Home() {
         <h2>Ready to get started?</h2>
         <p>Create an account and start distributing votes in minutes.</p>
         <div className={styles.ctaButtons}>
-          <Link to="/pricing" className={styles.heroCta}>See Pricing</Link>
+          {import.meta.env.VITE_APP_MODE === 'trial' ? (
+            user ? (
+              <Link to="/dashboard" className={styles.heroCta}>Dashboard</Link>
+            ) : (
+              <Link to="/login" className={styles.heroCta}>Login</Link>
+            )
+          ) : (
+            <Link to="/pricing" className={styles.heroCta}>See Pricing</Link>
+          )}
           {!user && <Link to="/signup" className={styles.ctaSecondary}>Create Account</Link>}
         </div>
       </section>
 
       {/* FAQ */}
-      <section className={styles.faq}>
-        <h2>Frequently Asked Questions</h2>
-        {FAQ_DATA.map((item, i) => (
-          <div key={i} className={styles.faqItem}>
-            <button className={styles.faqQuestion} onClick={() => setOpenFaq(openFaq === i ? null : i)}>
-              {item.q}
-              <span>{openFaq === i ? '−' : '+'}</span>
-            </button>
-            {openFaq === i && <p className={styles.faqAnswer}>{item.a}</p>}
-          </div>
-        ))}
-      </section>
+      {import.meta.env.VITE_APP_MODE !== 'trial' && (
+        <section className={styles.faq}>
+          <h2>Frequently Asked Questions</h2>
+          {FAQ_DATA.map((item, i) => (
+            <div key={i} className={styles.faqItem}>
+              <button className={styles.faqQuestion} onClick={() => setOpenFaq(openFaq === i ? null : i)}>
+                {item.q}
+                <span>{openFaq === i ? '−' : '+'}</span>
+              </button>
+              {openFaq === i && <p className={styles.faqAnswer}>{item.a}</p>}
+            </div>
+          ))}
+        </section>
+      )}
 
       <Footer />
     </>

@@ -40,9 +40,11 @@ export default function Navbar() {
           <NavLink to="/" end className={({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`}>
             Home
           </NavLink>
-          <NavLink to="/pricing" className={({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`}>
-            Pricing
-          </NavLink>
+          {import.meta.env.VITE_APP_MODE !== 'trial' && (
+            <NavLink to="/pricing" className={({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`}>
+              Pricing
+            </NavLink>
+          )}
           <NavLink to="/proof" className={({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`}>
             Proof
           </NavLink>
@@ -83,7 +85,9 @@ export default function Navbar() {
       {/* Mobile menu */}
       <div className={`${styles.mobileMenu} ${menuOpen ? styles.open : ''}`}>
         <NavLink to="/" end className={styles.navLink} onClick={() => setMenuOpen(false)}>Home</NavLink>
-        <NavLink to="/pricing" className={styles.navLink} onClick={() => setMenuOpen(false)}>Pricing</NavLink>
+        {import.meta.env.VITE_APP_MODE !== 'trial' && (
+          <NavLink to="/pricing" className={styles.navLink} onClick={() => setMenuOpen(false)}>Pricing</NavLink>
+        )}
         <NavLink to="/proof" className={styles.navLink} onClick={() => setMenuOpen(false)}>Proof</NavLink>
         {user && (
           <NavLink to="/dashboard" className={styles.navLink} onClick={() => setMenuOpen(false)}>Dashboard</NavLink>

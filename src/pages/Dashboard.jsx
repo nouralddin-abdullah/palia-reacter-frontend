@@ -154,7 +154,9 @@ export default function Dashboard() {
             {balance.toLocaleString()}<span>votes</span>
           </p>
         </div>
-        <Link to="/pricing" className={styles.buyMoreBtn}>Buy More Votes</Link>
+        {import.meta.env.VITE_APP_MODE !== 'trial' && (
+          <Link to="/pricing" className={styles.buyMoreBtn}>Buy More Votes</Link>
+        )}
       </div>
 
       {/* Stats */}
