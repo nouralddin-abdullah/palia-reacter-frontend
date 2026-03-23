@@ -119,7 +119,7 @@ export default function Pricing() {
             <strong>${Number(selectedPkg.price).toFixed(2)}</strong>.
           </p>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: 8 }}>
-            After creating the order, you'll receive an order number. Contact admin on Discord with this number to confirm your payment.
+            After creating the order, you'll receive an order number. Contact 'yasta1' on Discord with this number to confirm your payment.
           </p>
         </Modal>
       )}
