@@ -1,0 +1,120 @@
+.pricingPage {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 60px 24px;
+}
+
+.pricingPage h1 {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: var(--text-primary);
+}
+
+.subtitle {
+  text-align: center;
+  color: var(--text-secondary);
+  margin: 0 0 40px;
+  font-size: 0.95rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 28px 24px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.card.highlighted {
+  border-color: var(--accent);
+}
+
+.badge {
+  position: absolute;
+  top: -11px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 3px 12px;
+  border-radius: 20px;
+  white-space: nowrap;
+}
+
+.cardVotes {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 4px;
+}
+
+.cardVotes span {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: var(--text-secondary);
+}
+
+.cardPrice {
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin: 0 0 6px;
+}
+
+.cardRate {
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  margin: 0 0 20px;
+}
+
+.cardBtn {
+  margin-top: auto;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.cardBtn:hover {
+  opacity: 0.9;
+}
+
+.cardBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.originalPrice {
+  text-decoration: line-through;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  margin-right: 8px;
+  font-weight: 400;
+}
+
+.discountBadge {
+  background: rgba(74, 222, 128, 0.2);
+  color: #4ade80;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 8px;
+  vertical-align: middle;
+}

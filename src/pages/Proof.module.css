@@ -1,0 +1,58 @@
+.proofPage {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 60px 24px;
+}
+
+.proofPage h1 {
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 700;
+  margin: 0 0 8px;
+  color: var(--text-primary);
+}
+
+.subtitle {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  margin: 0 0 40px;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.proofCard {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.proofImage {
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.proofImage img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.proofMeta {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 16px;
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+}
