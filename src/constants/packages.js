@@ -1,3 +1,9 @@
+import WhimsicalImg from '../assets/Whimsical.png';
+import AmazeImg from '../assets/Amaze.png';
+import CoolImg from '../assets/Cool.png';
+import LoveImg from '../assets/Love.png';
+import CuteImg from '../assets/Cute.png';
+
 // Packages are now fetched from the API — no hardcoded array needed.
 
 // Find the package with the lowest price per vote (best value)
@@ -18,9 +24,9 @@ export function getBestValueId(packages = []) {
 export const MOST_POPULAR_ID = 5; // 1,000 votes
 
 export const REACTION_TYPES = [
-  { id: 'whimsical', label: 'Whimsical', emoji: '🧙‍♂️' },
-  { id: 'amaze', label: 'Amaze', emoji: '🤩' },
-  { id: 'cool', label: 'Cool', emoji: '😎' },
-  { id: 'love', label: 'Love', emoji: '😍' },
-  { id: 'cute', label: 'Cute', emoji: '🥺' },
+  { id: 'whimsical', label: 'Whimsical', emoji: '🧙‍♂️', image: WhimsicalImg },
+  { id: 'amaze', label: 'Amaze', emoji: '🤩', image: AmazeImg },
+  { id: 'cool', label: 'Cool', emoji: '😎', image: CoolImg },
+  { id: 'love', label: 'Love', emoji: '😍', image: LoveImg },
+  { id: 'cute', label: 'Cute', emoji: '🥺', image: CuteImg },
 ];

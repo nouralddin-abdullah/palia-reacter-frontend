@@ -58,16 +58,23 @@ export default function Dashboard() {
     setSending(true);
     try {
       const res = await send(targetName.trim(), parseInt(amount, 10), reactionType);
-      const emoji = REACTION_TYPES.find(r => r.id === reactionType)?.emoji || '';
+      const imgSrc = getReactionImage(reactionType);
       
-      let msg = `${emoji} Sent ${res.total} votes to ${res.target_name}`;
+      let msgText = `Sent ${res.total} votes to ${res.target_name}`;
       if (res.failed > 0) {
-        msg += ` (${res.succeeded} succeeded, ${res.failed} failed/refunded)`;
+        msgText += ` (${res.succeeded} succeeded, ${res.failed} failed/refunded)`;
       } else {
-        msg += ' successfully!';
+        msgText += ' successfully!';
       }
       
-      toast.success(msg, { duration: 5000 });
+      toast.success(
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {imgSrc && <img src={imgSrc} alt="reaction" style={{ width: 20, height: 20 }} />}
+          <span>{msgText}</span>
+        </div>,
+        { duration: 5000 }
+      );
+
       setTargetName('');
       setAmount('');
       setReactionType('cool');
@@ -118,6 +125,10 @@ export default function Dashboard() {
 
   const getReactionEmoji = (type) => {
     return REACTION_TYPES.find(r => r.id === type)?.emoji || '';
+  };
+
+  const getReactionImage = (type) => {
+    return REACTION_TYPES.find(r => r.id === type)?.image || '';
   };
 
   if (loading) {
@@ -272,8 +283,9 @@ export default function Dashboard() {
                       </td>
                       <td>
                         {tx.type === 'vote_sent' && tx.recipient_username ? (
-                          <span>
-                            {getReactionEmoji(tx.reaction_type)} sent to {tx.recipient_username}
+                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                            <img src={getReactionImage(tx.reaction_type)} alt={tx.reaction_type} style={{ width: 20, height: 20 }} />
+                            <span>sent to {tx.recipient_username}</span>
                           </span>
                         ) : (
                           <span>{tx.note || '—'}</span>
@@ -338,7 +350,8 @@ export default function Dashboard() {
         >
           <p>
             Send <strong>{parseInt(amount, 10).toLocaleString()} votes</strong> to{' '}
-            <strong>{targetName.trim()}</strong> with {getReactionEmoji(reactionType)}{' '}
+            <strong>{targetName.trim()}</strong> with{' '}
+            <img src={getReactionImage(reactionType)} alt={reactionType} style={{ width: 20, height: 20, verticalAlign: 'middle', margin: '0 4px' }} />{' '}
             <strong>{REACTION_TYPES.find(r => r.id === reactionType)?.label}</strong> reaction?
           </p>
           <p style={{ fontSize: '0.85rem', color: 'var(--text-muted)', marginTop: 8 }}>
