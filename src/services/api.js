@@ -122,3 +122,12 @@ export async function redeemCode(code) {
   });
   return data;
 }
+
+/** POST /auth/link-discord — link website account to Discord */
+export async function linkDiscord(code) {
+  const data = await apiFetch('/auth/link-discord', {
+    method: 'POST',
+    body: JSON.stringify({ code }),
+  });
+  return data;
+}
