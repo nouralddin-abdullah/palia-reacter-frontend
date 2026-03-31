@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import usePageMeta from '../hooks/usePageMeta';
 import Footer from '../components/Footer';
 import styles from './Home.module.css';
 
@@ -41,6 +42,12 @@ const IconShield = () => (
 export default function Home() {
   const { user } = useAuth();
   const [openFaq, setOpenFaq] = useState(null);
+
+  usePageMeta({
+    title: 'PaliaVote — Buy & Distribute Votes Instantly',
+    description: 'PaliaVote lets you buy vote packages and distribute them to anyone, in any amount. Fast, secure, and flexible vote delivery with instant results.',
+    canonicalPath: '/',
+  });
 
   return (
     <>

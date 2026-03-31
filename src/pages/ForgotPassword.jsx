@@ -1,8 +1,15 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import usePageMeta from '../hooks/usePageMeta';
 import styles from './Auth.module.css';
 
 export default function ForgotPassword() {
+  usePageMeta({
+    title: 'Reset Password — PaliaVote',
+    description: 'Reset your PaliaVote account password. Enter your email and we\'ll send you a recovery link.',
+    canonicalPath: '/forgot-password',
+  });
+
   const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);

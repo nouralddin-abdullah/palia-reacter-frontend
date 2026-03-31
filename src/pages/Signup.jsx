@@ -1,10 +1,17 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import usePageMeta from '../hooks/usePageMeta';
 import toast from 'react-hot-toast';
 import styles from './Auth.module.css';
 
 export default function Signup() {
+  usePageMeta({
+    title: 'Sign Up — PaliaVote',
+    description: 'Create your free PaliaVote account to start buying and distributing votes instantly.',
+    canonicalPath: '/signup',
+  });
+
   const { signupUser } = useAuth();
   const navigate = useNavigate();
   const [form, setForm] = useState({ username: '', email: '', password: '', confirmPassword: '' });

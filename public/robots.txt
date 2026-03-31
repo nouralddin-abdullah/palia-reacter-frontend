@@ -1,0 +1,8 @@
+# PaliaVote — robots.txt
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /profile
+
+# Sitemap location
+Sitemap: https://paliavote.maen.fun/sitemap.xml

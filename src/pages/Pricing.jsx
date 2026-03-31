@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { getBestValueId, MOST_POPULAR_ID } from '../constants/packages';
 import { getPackages, createOrder } from '../services/api';
+import usePageMeta from '../hooks/usePageMeta';
 import Modal from '../components/Modal';
 import Footer from '../components/Footer';
 import toast from 'react-hot-toast';
@@ -11,6 +12,12 @@ import styles from './Pricing.module.css';
 export default function Pricing() {
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  usePageMeta({
+    title: 'Vote Packages & Pricing — PaliaVote',
+    description: 'Browse PaliaVote vote packages with bulk discounts. Choose the right package and start distributing votes instantly.',
+    canonicalPath: '/pricing',
+  });
 
   const [packages, setPackages] = useState([]);
   const [packagesLoading, setPackagesLoading] = useState(true);

@@ -1,10 +1,16 @@
 import Footer from '../components/Footer';
 import { getProofs } from '../services/api';
 import { useState, useEffect } from 'react';
+import usePageMeta from '../hooks/usePageMeta';
 import toast from 'react-hot-toast';
 import styles from './Proof.module.css';
 
 export default function Proof() {
+  usePageMeta({
+    title: 'Proof of Delivery — PaliaVote',
+    description: 'See real proof of vote delivery from verified PaliaVote orders. Transparent results you can trust.',
+    canonicalPath: '/proof',
+  });
   const [proofs, setProofs] = useState([]);
   const [loading, setLoading] = useState(true);
 
