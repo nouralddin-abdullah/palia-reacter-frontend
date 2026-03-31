@@ -1,0 +1,2 @@
+# Serve static files first, then SPA fallback
+/* /index.html 200
