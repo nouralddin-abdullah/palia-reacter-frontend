@@ -161,8 +161,8 @@
   background: var(--surface);
   border-bottom: 1px solid var(--border);
   padding: 12px 24px;
-  position: fixed;
-  top: 60px;
+  position: absolute;
+  top: 100%;
   left: 0;
   right: 0;
   z-index: 99;

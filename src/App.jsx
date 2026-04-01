@@ -3,6 +3,8 @@ import { useAuth } from './context/AuthContext';
 import { VoteProvider } from './context/VoteContext';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './components/ProtectedRoute';
+import FloatingContact from './components/FloatingContact';
+import EventsBanner from './components/EventsBanner';
 import Home from './pages/Home';
 import Pricing from './pages/Pricing';
 import Proof from './pages/Proof';
@@ -24,7 +26,9 @@ function AppRoutes() {
 
   return (
     <>
+      <EventsBanner />
       <Navbar />
+      <FloatingContact />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/pricing" element={user ? <VoteProvider><Pricing /></VoteProvider> : <Pricing />} />

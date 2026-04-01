@@ -1,0 +1,128 @@
+.bannerContainer {
+  display: flex;
+  flex-direction: column;
+}
+
+.banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 24px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.12) 0%, rgba(99, 102, 241, 0.06) 100%);
+  border-bottom: 1px solid rgba(99, 102, 241, 0.2);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.bannerContent {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+}
+
+.bannerContent svg {
+  color: var(--accent);
+  flex-shrink: 0;
+}
+
+.tag {
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  flex-shrink: 0;
+}
+
+.title {
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+}
+
+.separator {
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.description {
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.link {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 500;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: opacity 0.15s;
+}
+
+.link:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+.dismiss {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-left: 12px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.dismiss:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+/* ── Mobile ───────────────────────────────────── */
+@media (max-width: 600px) {
+  .banner {
+    padding: 10px 16px;
+  }
+
+  .bannerContent {
+    flex-wrap: wrap;
+    gap: 6px;
+    font-size: 0.8rem;
+  }
+
+  .separator {
+    display: none;
+  }
+
+  .description {
+    white-space: normal;
+    flex-basis: 100%;
+    padding-left: 28px;
+    margin-top: -2px;
+  }
+}

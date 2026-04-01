@@ -30,7 +30,6 @@ export default function Navbar() {
   const initials = user ? user.username.slice(0, 2).toUpperCase() : '';
 
   return (
-    <>
       <nav className={styles.navbar}>
         <Link to="/" className={styles.logo}>
           Palia<span>Vote</span>
@@ -80,32 +79,32 @@ export default function Navbar() {
         <button className={styles.hamburger} onClick={() => setMenuOpen(!menuOpen)}>
           {menuOpen ? '✕' : '☰'}
         </button>
-      </nav>
 
-      {/* Mobile menu */}
-      <div className={`${styles.mobileMenu} ${menuOpen ? styles.open : ''}`}>
-        <NavLink to="/" end className={styles.navLink} onClick={() => setMenuOpen(false)}>Home</NavLink>
-        {import.meta.env.VITE_APP_MODE !== 'trial' && (
-          <NavLink to="/pricing" className={styles.navLink} onClick={() => setMenuOpen(false)}>Pricing</NavLink>
-        )}
-        <NavLink to="/proof" className={styles.navLink} onClick={() => setMenuOpen(false)}>Proof</NavLink>
-        {user && (
-          <NavLink to="/dashboard" className={styles.navLink} onClick={() => setMenuOpen(false)}>Dashboard</NavLink>
-        )}
-        <div className={styles.mobileAuthButtons}>
-          {!user ? (
-            <>
-              <Link to="/login" className={styles.btnLogin} onClick={() => setMenuOpen(false)}>Log In</Link>
-              <Link to="/signup" className={styles.btnSignup} onClick={() => setMenuOpen(false)}>Sign Up</Link>
-            </>
-          ) : (
-            <>
-              <Link to="/profile" className={styles.navLink} onClick={() => setMenuOpen(false)}>Profile</Link>
-              <button className={styles.dropdownBtn} onClick={() => { handleLogout(); setMenuOpen(false); }}>Log Out</button>
-            </>
+        {/* Mobile menu */}
+        <div className={`${styles.mobileMenu} ${menuOpen ? styles.open : ''}`}>
+          <NavLink to="/" end className={styles.navLink} onClick={() => setMenuOpen(false)}>Home</NavLink>
+          {import.meta.env.VITE_APP_MODE !== 'trial' && (
+            <NavLink to="/pricing" className={styles.navLink} onClick={() => setMenuOpen(false)}>Pricing</NavLink>
           )}
+          <NavLink to="/proof" className={styles.navLink} onClick={() => setMenuOpen(false)}>Proof</NavLink>
+          {user && (
+            <NavLink to="/dashboard" className={styles.navLink} onClick={() => setMenuOpen(false)}>Dashboard</NavLink>
+          )}
+          <div className={styles.mobileAuthButtons}>
+            {!user ? (
+              <>
+                <Link to="/login" className={styles.btnLogin} onClick={() => setMenuOpen(false)}>Log In</Link>
+                <Link to="/signup" className={styles.btnSignup} onClick={() => setMenuOpen(false)}>Sign Up</Link>
+              </>
+            ) : (
+              <>
+                <Link to="/profile" className={styles.navLink} onClick={() => setMenuOpen(false)}>Profile</Link>
+                <button className={styles.dropdownBtn} onClick={() => { handleLogout(); setMenuOpen(false); }}>Log Out</button>
+              </>
+            )}
+          </div>
         </div>
-      </div>
-    </>
+      </nav>
   );
 }
+
