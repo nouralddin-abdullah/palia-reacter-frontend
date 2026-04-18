@@ -1,10 +1,10 @@
 /**
  * ═══════════════════════════════════════════════════════════
  *  EVENTS CONFIGURATION
- *  
+ *
  *  To add an event:   Add an object to the EVENTS array below.
  *  To remove events:  Empty the array → no banner shown.
- *  
+ *
  *  Each event object:
  *    title       — Short event name (required)
  *    description — One-line summary (required)
@@ -20,11 +20,12 @@
 
 const EVENTS = [
   {
-    title: '200 Votes',
-    description: 'Contact us on Discord or Facebook to get you free redeem code with 200 votes',
-    tag: 'FREE',
-    linkText: 'Contact Us',
-    endsAt: '2026-04-05T23:59:59Z',
+    title: "200 Votes",
+    description:
+      "Contact us on Discord or Facebook to get you free redeem code with 200 votes",
+    tag: "FREE",
+    linkText: "Contact Us",
+    endsAt: "2026-05-05T23:59:59Z",
   },
 ];
 
