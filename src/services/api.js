@@ -64,10 +64,12 @@ export async function getPackages() {
 // ─── Orders ─────────────────────────────────────────────
 
 /** POST /orders — create a purchase order */
-export async function createOrder(packageId) {
+export async function createOrder(packageId, discordUsername = null) {
+  const body = { package_id: packageId };
+  if (discordUsername) body.discord_username = discordUsername;
   const data = await apiFetch('/orders', {
     method: 'POST',
-    body: JSON.stringify({ package_id: packageId }),
+    body: JSON.stringify(body),
   });
   return { order: data.order, message: data.message };
 }
