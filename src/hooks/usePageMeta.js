@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect } from "react";
 
 /**
  * Sets page-level SEO meta tags for each route.
@@ -19,42 +19,46 @@ export default function usePageMeta({ title, description, canonicalPath }) {
     if (description) {
       let metaDesc = document.querySelector('meta[name="description"]');
       if (metaDesc) {
-        metaDesc.setAttribute('content', description);
+        metaDesc.setAttribute("content", description);
       } else {
-        metaDesc = document.createElement('meta');
-        metaDesc.setAttribute('name', 'description');
-        metaDesc.setAttribute('content', description);
+        metaDesc = document.createElement("meta");
+        metaDesc.setAttribute("name", "description");
+        metaDesc.setAttribute("content", description);
         document.head.appendChild(metaDesc);
       }
     }
 
     // Update OG tags
     const ogTags = {
-      'og:title': title,
-      'og:description': description,
-      'og:url': canonicalPath ? `https://paliavote.maen.fun${canonicalPath}` : undefined,
+      "og:title": title,
+      "og:description": description,
+      "og:url": canonicalPath
+        ? `https://paliavote.com${canonicalPath}`
+        : undefined,
     };
 
     for (const [property, content] of Object.entries(ogTags)) {
       if (!content) continue;
       let tag = document.querySelector(`meta[property="${property}"]`);
       if (tag) {
-        tag.setAttribute('content', content);
+        tag.setAttribute("content", content);
       }
     }
 
     // Update Twitter tags
     const twitterTags = {
-      'twitter:title': title,
-      'twitter:description': description,
-      'twitter:url': canonicalPath ? `https://paliavote.maen.fun${canonicalPath}` : undefined,
+      "twitter:title": title,
+      "twitter:description": description,
+      "twitter:url": canonicalPath
+        ? `https://paliavote.com${canonicalPath}`
+        : undefined,
     };
 
     for (const [name, content] of Object.entries(twitterTags)) {
       if (!content) continue;
       let tag = document.querySelector(`meta[name="${name}"]`);
       if (tag) {
-        tag.setAttribute('content', content);
+        tag.setAttribute("content", content);
       }
     }
 
@@ -62,7 +66,7 @@ export default function usePageMeta({ title, description, canonicalPath }) {
     if (canonicalPath) {
       let canonical = document.querySelector('link[rel="canonical"]');
       if (canonical) {
-        canonical.setAttribute('href', `https://paliavote.maen.fun${canonicalPath}`);
+        canonical.setAttribute("href", `https://paliavote.com${canonicalPath}`);
       }
     }
   }, [title, description, canonicalPath]);
