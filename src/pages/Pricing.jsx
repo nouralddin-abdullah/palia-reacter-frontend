@@ -48,15 +48,18 @@ export default function Pricing() {
     setPurchasing(true);
     try {
       const res = await createOrder(selectedPkg.id, discordUsername || null);
-      setSelectedPkg(null);
-      setDiscordUsername('');
-      toast.success(
-        `Order created! Your order number is ${res.order.order_number}. Contact admin on Discord to confirm payment.`,
-        { duration: 8000 }
-      );
+      if (res.order.checkout_url) {
+        window.location.href = res.order.checkout_url;
+      } else {
+        setSelectedPkg(null);
+        setDiscordUsername('');
+        toast.success(
+          `Order created! Your order number is ${res.order.order_number}. Contact admin on Discord to confirm payment.`,
+          { duration: 8000 }
+        );
+      }
     } catch (err) {
       toast.error(err.message || 'Failed to create order');
-    } finally {
       setPurchasing(false);
     }
   };
@@ -121,7 +124,7 @@ export default function Pricing() {
           title="Confirm Your Order"
           onCancel={() => { setSelectedPkg(null); setDiscordUsername(''); }}
           onConfirm={confirmPurchase}
-          confirmText="Place Order"
+          confirmText="Proceed to Checkout"
           loading={purchasing}
         >
           <div className={styles.orderSummary}>
@@ -139,15 +142,15 @@ export default function Pricing() {
             <div className={styles.stepTitle}>How it works</div>
             <div className={styles.step}>
               <span className={styles.stepNum}>1</span>
-              <span>Place your order to receive a unique order number</span>
+              <span>Click checkout to proceed to our secure Whop payment page</span>
             </div>
             <div className={styles.step}>
               <span className={styles.stepNum}>2</span>
-              <span>Message <strong>yasta1</strong> on Discord with your order number</span>
+              <span>Complete your purchase securely</span>
             </div>
             <div className={styles.step}>
               <span className={styles.stepNum}>3</span>
-              <span>Complete payment and receive your votes instantly</span>
+              <span>Your votes will be automatically added to your balance instantly</span>
             </div>
           </div>
 
