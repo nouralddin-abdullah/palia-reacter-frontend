@@ -28,6 +28,7 @@ export default function Navbar() {
   };
 
   const initials = user ? user.username.slice(0, 2).toUpperCase() : '';
+  const isStaff = user && (user.role === 'admin' || user.role === 'moderator');
 
   return (
       <nav className={styles.navbar}>
@@ -52,6 +53,11 @@ export default function Navbar() {
               Dashboard
             </NavLink>
           )}
+          {isStaff && (
+            <NavLink to="/admin" className={({ isActive }) => `${styles.navLink} ${isActive ? styles.active : ''}`}>
+              Admin
+            </NavLink>
+          )}
         </div>
 
         <div className={styles.authButtons}>
@@ -69,6 +75,9 @@ export default function Navbar() {
                 <div className={styles.dropdown}>
                   <Link to="/profile" className={styles.dropdownLink} onClick={() => setDropdownOpen(false)}>Profile</Link>
                   <Link to="/dashboard" className={styles.dropdownLink} onClick={() => setDropdownOpen(false)}>Dashboard</Link>
+                  {isStaff && (
+                    <Link to="/admin" className={styles.dropdownLink} onClick={() => setDropdownOpen(false)}>Admin</Link>
+                  )}
                   <button className={styles.dropdownBtn} onClick={handleLogout}>Log Out</button>
                 </div>
               )}
@@ -89,6 +98,9 @@ export default function Navbar() {
           <NavLink to="/proof" className={styles.navLink} onClick={() => setMenuOpen(false)}>Proof</NavLink>
           {user && (
             <NavLink to="/dashboard" className={styles.navLink} onClick={() => setMenuOpen(false)}>Dashboard</NavLink>
+          )}
+          {isStaff && (
+            <NavLink to="/admin" className={styles.navLink} onClick={() => setMenuOpen(false)}>Admin</NavLink>
           )}
           <div className={styles.mobileAuthButtons}>
             {!user ? (

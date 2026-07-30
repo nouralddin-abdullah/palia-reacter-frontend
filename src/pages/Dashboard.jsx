@@ -8,8 +8,16 @@ import toast from 'react-hot-toast';
 import styles from './Dashboard.module.css';
 
 export default function Dashboard() {
-  const { balance, stats, loading, send, redeem } = useVotes();
+  const { 
+    balance, stats, loading, send, redeem,
+    bulkQueue, bulkProcessing, bulkCurrentIndex, bulkResults,
+    loadBulkQueue, startBulkQueue, cancelBulkQueue, clearBulkQueue
+  } = useVotes();
   
+  // Bulk state
+  const [mode, setMode] = useState('single');
+  const [bulkInput, setBulkInput] = useState('');
+  const [bulkInputError, setBulkInputError] = useState('');
   // Send form state
   const [targetName, setTargetName] = useState('');
   const [amount, setAmount] = useState('');
@@ -198,80 +206,212 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Send Votes */}
+      {/* Send Votes / Bulk Vote */}
       <div className={styles.section}>
-        <h2>Send Votes</h2>
-        <div className={styles.sendForm}>
-          <div className={styles.sendGroup}>
-            <label>Character Name</label>
-            <input
-              value={targetName}
-              onChange={(e) => setTargetName(e.target.value)}
-              placeholder="e.g. John Doe"
-            />
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+          <h2 style={{ margin: 0 }}>{mode === 'single' ? 'Send Votes' : 'Bulk Vote Queue'}</h2>
+          <div className={styles.modeToggle}>
+            <button 
+              className={`${styles.modeToggleBtn} ${mode === 'single' ? styles.modeToggleBtnActive : ''}`}
+              onClick={() => setMode('single')}
+            >
+              Single
+            </button>
+            <button 
+              className={`${styles.modeToggleBtn} ${mode === 'bulk' ? styles.modeToggleBtnActive : ''}`}
+              onClick={() => setMode('bulk')}
+            >
+              Bulk
+            </button>
           </div>
-          <div className={styles.sendGroup}>
-            <label>Number of Votes</label>
-            <input
-              type="number"
-              min="1"
-              max={balance}
-              value={amount}
-              onChange={(e) => setAmount(e.target.value)}
-              placeholder="e.g. 50"
-            />
-          </div>
-          <div className={styles.sendGroup}>
-            <label>Reaction Type</label>
-            <div ref={dropdownRef} style={{ position: 'relative', width: '100%' }}>
-              <div
-                className={styles.selectInput}
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                style={{ 
-                  display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', 
-                  userSelect: 'none', minHeight: '42px', backgroundColor: 'var(--bg)', 
-                  border: '1px solid var(--border)', borderRadius: '6px', padding: '0 12px' 
-                }}
-              >
-                <img src={getReactionImage(reactionType)} style={{ width: 20, height: 20 }} alt="reaction" />
-                <span>{REACTION_TYPES.find(r => r.id === reactionType)?.label}</span>
-                <span style={{ marginLeft: 'auto', fontSize: '0.8rem', color: 'var(--text-muted)' }}>▼</span>
+        </div>
+
+        {mode === 'single' ? (
+          <div className={styles.sendForm}>
+            <div className={styles.sendGroup}>
+              <label>Character Name</label>
+              <input
+                value={targetName}
+                onChange={(e) => setTargetName(e.target.value)}
+                placeholder="e.g. John Doe"
+              />
+            </div>
+            <div className={styles.sendGroup}>
+              <label>Number of Votes</label>
+              <input
+                type="number"
+                min="1"
+                max={balance}
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                placeholder="e.g. 50"
+              />
+            </div>
+            <div className={styles.sendGroup}>
+              <label>Reaction Type</label>
+              <div ref={dropdownRef} style={{ position: 'relative', width: '100%' }}>
+                <div
+                  className={styles.selectInput}
+                  onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+                  style={{ 
+                    display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', 
+                    userSelect: 'none', minHeight: '42px', backgroundColor: 'var(--bg)', 
+                    border: '1px solid var(--border)', borderRadius: '6px', padding: '0 12px' 
+                  }}
+                >
+                  <img src={getReactionImage(reactionType)} style={{ width: 20, height: 20 }} alt="reaction" />
+                  <span>{REACTION_TYPES.find(r => r.id === reactionType)?.label}</span>
+                  <span style={{ marginLeft: 'auto', fontSize: '0.8rem', color: 'var(--text-muted)' }}>▼</span>
+                </div>
+                
+                {isDropdownOpen && (
+                  <div style={{ 
+                    position: 'absolute', top: '100%', left: 0, right: 0, marginTop: '4px', 
+                    backgroundColor: 'var(--surface)', border: '1px solid var(--border)', 
+                    borderRadius: '6px', zIndex: 10, overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.3)' 
+                  }}>
+                    {REACTION_TYPES.map(r => (
+                      <div
+                        key={r.id}
+                        onClick={() => {
+                          setReactionType(r.id);
+                          setIsDropdownOpen(false);
+                        }}
+                        style={{
+                          display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 12px', cursor: 'pointer',
+                          backgroundColor: reactionType === r.id ? 'rgba(255,255,255,0.05)' : 'transparent',
+                          borderBottom: r.id !== REACTION_TYPES[REACTION_TYPES.length - 1].id ? '1px solid var(--border)' : 'none'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.08)'}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = reactionType === r.id ? 'rgba(255,255,255,0.05)' : 'transparent'}
+                      >
+                        <img src={getReactionImage(r.id)} alt={r.label} style={{ width: 20, height: 20 }} />
+                        <span>{r.label}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
-              
-              {isDropdownOpen && (
-                <div style={{ 
-                  position: 'absolute', top: '100%', left: 0, right: 0, marginTop: '4px', 
-                  backgroundColor: 'var(--surface)', border: '1px solid var(--border)', 
-                  borderRadius: '6px', zIndex: 10, overflow: 'hidden', boxShadow: '0 4px 12px rgba(0,0,0,0.3)' 
-                }}>
-                  {REACTION_TYPES.map(r => (
-                    <div
-                      key={r.id}
-                      onClick={() => {
-                        setReactionType(r.id);
-                        setIsDropdownOpen(false);
-                      }}
-                      style={{
-                        display: 'flex', alignItems: 'center', gap: '8px', padding: '10px 12px', cursor: 'pointer',
-                        backgroundColor: reactionType === r.id ? 'rgba(255,255,255,0.05)' : 'transparent',
-                        borderBottom: r.id !== REACTION_TYPES[REACTION_TYPES.length - 1].id ? '1px solid var(--border)' : 'none'
-                      }}
-                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.08)'}
-                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = reactionType === r.id ? 'rgba(255,255,255,0.05)' : 'transparent'}
+            </div>
+            <button className={styles.sendBtn} onClick={handleSendClick} disabled={!targetName || !amount}>
+              Send Votes
+            </button>
+            {sendError && <div className={styles.sendError}>{sendError}</div>}
+          </div>
+        ) : (
+          <div className={styles.bulkSection}>
+            {bulkQueue.length === 0 ? (
+              <>
+                <textarea
+                  className={styles.jsonInput}
+                  value={bulkInput}
+                  onChange={(e) => setBulkInput(e.target.value)}
+                  placeholder={`[\n  { "ign": "John Doe", "goal": 500, "reaction": "amaze" }\n]`}
+                />
+                <button 
+                  className={styles.sendBtn} 
+                  onClick={() => {
+                    setBulkInputError('');
+                    try {
+                      const parsed = JSON.parse(bulkInput);
+                      if (!Array.isArray(parsed)) throw new Error('Input must be a JSON array');
+                      loadBulkQueue(parsed);
+                    } catch (err) {
+                      setBulkInputError(err.message);
+                    }
+                  }}
+                >
+                  Parse & Load
+                </button>
+                {bulkInputError && <div className={styles.sendError}>{bulkInputError}</div>}
+              </>
+            ) : (
+              <>
+                {/* Queue Summary & Progress */}
+                <div style={{ marginBottom: 16 }}>
+                  <p style={{ margin: '0 0 8px', fontSize: '0.9rem', color: 'var(--text-secondary)' }}>
+                    Processing {bulkQueue.filter(i => i.status === 'completed' || i.status === 'failed').length} of {bulkQueue.length} — {bulkQueue.reduce((acc, curr) => acc + curr.goal, 0).toLocaleString()} votes total
+                  </p>
+                  <div className={styles.progressBar}>
+                    <div 
+                      className={styles.progressFill} 
+                      style={{ width: `${(bulkQueue.filter(i => i.status === 'completed' || i.status === 'failed').length / bulkQueue.length) * 100}%` }}
+                    />
+                  </div>
+                </div>
+
+                {/* Queue List */}
+                <div className={styles.queueList}>
+                  {bulkQueue.map((item, idx) => (
+                    <div 
+                      key={idx} 
+                      className={`${styles.queueItem} ${item.status === 'processing' ? styles.queueItemActive : item.status === 'completed' ? styles.queueItemDone : item.status === 'failed' ? styles.queueItemFailed : ''}`}
                     >
-                      <img src={getReactionImage(r.id)} alt={r.label} style={{ width: 20, height: 20 }} />
-                      <span>{r.label}</span>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                        <img src={getReactionImage(item.reaction)} alt={item.reaction} style={{ width: 24, height: 24 }} />
+                        <div>
+                          <p style={{ margin: 0, fontWeight: 500, color: 'var(--text-primary)' }}>{item.ign}</p>
+                          <p style={{ margin: '4px 0 0', fontSize: '0.8rem', color: 'var(--text-secondary)' }}>
+                            Goal: {item.goal.toLocaleString()}
+                            {item.result && ` • Succeeded: ${item.result.succeeded || 0} • Failed: ${item.result.failed || 0}`}
+                            {item.result?.error && ` • Error: ${item.result.error}`}
+                          </p>
+                        </div>
+                      </div>
+                      <div style={{ fontSize: '0.85rem', fontWeight: 500, color: 'var(--text-muted)' }}>
+                        {item.status === 'pending' && 'Pending'}
+                        {item.status === 'processing' && 'Processing'}
+                        {item.status === 'completed' && 'Done'}
+                        {item.status === 'failed' && 'Failed'}
+                      </div>
                     </div>
                   ))}
                 </div>
-              )}
-            </div>
+
+                {/* Controls */}
+                <div className={styles.bulkControls}>
+                  {!bulkProcessing && bulkQueue.some(i => i.status === 'pending' || i.status === 'failed') && (
+                    <button 
+                      className={styles.sendBtn} 
+                      onClick={async () => {
+                        try {
+                          await startBulkQueue();
+                          toast.success('Bulk queue finished processing');
+                        } catch (err) {
+                          toast.error(err.message);
+                        }
+                      }}
+                    >
+                      Start Queue
+                    </button>
+                  )}
+                  {bulkProcessing && (
+                    <button className={styles.sendBtn} onClick={cancelBulkQueue}>
+                      Pause / Cancel
+                    </button>
+                  )}
+                  <button className={styles.sendBtn} style={{ background: 'var(--bg)', color: 'var(--text-primary)', border: '1px solid var(--border)' }} onClick={clearBulkQueue}>
+                    Clear Queue
+                  </button>
+                </div>
+                
+                {/* Summary */}
+                {!bulkQueue.some(i => i.status === 'pending' || i.status === 'processing') && (
+                  <div className={styles.bulkSummary}>
+                    <div>
+                      <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Total Succeeded</p>
+                      <p style={{ margin: '4px 0 0', fontSize: '1.2rem', fontWeight: 600, color: '#22c55e' }}>{bulkResults.succeeded.toLocaleString()}</p>
+                    </div>
+                    <div>
+                      <p style={{ margin: 0, fontSize: '0.85rem', color: 'var(--text-secondary)' }}>Total Failed</p>
+                      <p style={{ margin: '4px 0 0', fontSize: '1.2rem', fontWeight: 600, color: '#ef4444' }}>{bulkResults.failed.toLocaleString()}</p>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
           </div>
-          <button className={styles.sendBtn} onClick={handleSendClick} disabled={!targetName || !amount}>
-            Send Votes
-          </button>
-          {sendError && <div className={styles.sendError}>{sendError}</div>}
-        </div>
+        )}
       </div>
 
       {/* Redeem Code */}

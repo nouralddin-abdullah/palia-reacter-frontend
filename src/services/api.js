@@ -133,3 +133,87 @@ export async function linkDiscord(code) {
   });
   return data;
 }
+
+// ─── Admin / Moderator ──────────────────────────────────
+
+function query(params) {
+  const search = new URLSearchParams();
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined && value !== null && value !== '') {
+      search.set(key, value);
+    }
+  }
+  const str = search.toString();
+  return str ? `?${str}` : '';
+}
+
+/** GET /admin/users — search users (staff); gift_cap is null for admins */
+export async function searchUsers({ search = '', page = 1, limit = 10 } = {}) {
+  const data = await apiFetch(`/admin/users${query({ search, page, limit })}`);
+  return {
+    users: data.users,
+    gift_cap: data.gift_cap,
+    viewer_role: data.viewer_role,
+    pagination: data.pagination,
+  };
+}
+
+/** PATCH /admin/users/:id/role — promote or demote a user (admin only) */
+export async function setUserRole(userId, role) {
+  return apiFetch(`/admin/users/${userId}/role`, {
+    method: 'PATCH',
+    body: JSON.stringify({ role }),
+  });
+}
+
+/** POST /admin/gift — gift votes to a user (staff) */
+export async function giftVotes({ userId, username, amount, note }) {
+  const body = { amount: Number(amount) };
+  if (userId) body.user_id = userId;
+  if (username) body.username = username;
+  if (note) body.note = note;
+  return apiFetch('/admin/gift', { method: 'POST', body: JSON.stringify(body) });
+}
+
+/** GET /admin/codes — list all redeem codes (staff) */
+export async function getRedeemCodes() {
+  const data = await apiFetch('/admin/codes');
+  return data.codes;
+}
+
+/** POST /admin/codes — create a redeem code; omit code to auto-generate (staff) */
+export async function createRedeemCode({ code, votes, maxUses, expiresAt }) {
+  const body = { votes: Number(votes) };
+  if (code) body.code = code;
+  if (maxUses) body.max_uses = Number(maxUses);
+  if (expiresAt) body.expires_at = expiresAt;
+  const data = await apiFetch('/admin/codes', {
+    method: 'POST',
+    body: JSON.stringify(body),
+  });
+  return data.code;
+}
+
+/** DELETE /admin/codes/:id — delete a redeem code (staff) */
+export async function deleteRedeemCode(id) {
+  return apiFetch(`/admin/codes/${id}`, { method: 'DELETE' });
+}
+
+/** GET /admin/vote-history — site-wide vote send history (staff) */
+export async function getVoteHistory({
+  search = '',
+  reactionType = '',
+  page = 1,
+  limit = 20,
+} = {}) {
+  const data = await apiFetch(
+    `/admin/vote-history${query({ search, reaction_type: reactionType, page, limit })}`,
+  );
+  return { history: data.history, pagination: data.pagination };
+}
+
+/** GET /admin/audit — staff action audit log (staff) */
+export async function getAuditLog({ action = '', actor = '', page = 1, limit = 20 } = {}) {
+  const data = await apiFetch(`/admin/audit${query({ action, actor, page, limit })}`);
+  return { actions: data.actions, pagination: data.pagination };
+}
