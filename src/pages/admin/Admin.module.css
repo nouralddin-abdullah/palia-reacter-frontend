@@ -135,6 +135,20 @@
   border-color: var(--accent);
 }
 
+/* The native date/time picker icon renders near-black by default, which is
+   invisible on the dark admin theme. invert(1) flips it to white. */
+.field input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+.field input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: 0.65;
+  cursor: pointer;
+}
+
+.field input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover,
+.field input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+}
+
 .btn {
   background: var(--accent);
   color: #fff;
